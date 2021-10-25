@@ -1,0 +1,1 @@
+<a href="{{route('ris.create')}}" onclick="return confirm('Are you sure you want to create RIS record?')">RIS</a>
