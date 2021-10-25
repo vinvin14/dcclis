@@ -23,7 +23,7 @@ class RISRepository
         if (!empty ($office))
         {
             $query = $query->where('requesting_office', $office);
-        } 
+        }
 
         return $query->get();
     }

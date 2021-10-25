@@ -53,10 +53,10 @@ class IARItemRepository
             'item_table.specifications',
             'ris_items.all_request_qty',
             DB::raw('SUM(
-                CASE WHEN iar_items_table.expiration_date IS NULL 
-                OR (iar_items_table.expiration_date IS NOT NULL AND iar_items_table.expiration_date > '.Carbon::now()->toDateString().') 
+                CASE WHEN iar_items_table.expiration_date IS NULL
+                OR (iar_items_table.expiration_date IS NOT NULL AND iar_items_table.expiration_date > '.Carbon::now()->toDateString().')
                 THEN iar_items_table.current_qty
-                ELSE 0 END) - (CASE WHEN ris_items.all_request_qty IS NULL THEN 0 ELSE ris_items.all_request_qty END) 
+                ELSE 0 END) - (CASE WHEN ris_items.all_request_qty IS NULL THEN 0 ELSE ris_items.all_request_qty END)
                 as remaining_qty')
             // DB::raw('IF(iar_items_table.expiration_date IS NULL, SUM(iar_items_table.current_qty), SUM(CASE WHEN iar_items_table.expiration_date > '.Carbon::now()->toDateString().' THEN iar_items_table.current_qty END)) as remaining_qty')
         )
@@ -64,6 +64,55 @@ class IARItemRepository
             [
                 'iar_items_table.receiving_office' => $office,
                 'item_table.category' => $category
+            ]
+        )
+        ->groupBy('iar_items_table.id')
+        ->having('remaining_qty', '!=', 0)
+        ->get();
+    }
+
+    public function getIarItem($id, $office, $category)
+    {
+        $ris_items = DB::table('ris_items_table')
+        ->leftJoin('ris_table', 'ris_items_table.ris_id', '=', 'ris_table.id')
+        ->select(
+            'ris_items_table.iar_item_id',
+            DB::raw('sum(request_qty) as all_request_qty')
+        )
+        ->where([
+            'ris_table.status' => 'pending',
+            'ris_items_table.status' => 'pending',
+            'iar_item_id' => $id
+        ])
+        ->groupBy('ris_items_table.iar_item_id');
+
+
+        return DB::table('iar_items_table')
+        ->leftJoin('fmtis.items_table as item_table', 'iar_items_table.item_id', '=', 'item_table.id')
+        ->leftJoin('fmtis.item_category_table as item_category_table', 'item_table.category', '=', 'item_category_table.id')
+        ->leftJoinSub($ris_items, 'ris_items', function ($join) {
+            $join->on('iar_items_table.id', '=', 'ris_items.iar_item_id');
+        })
+        ->select(
+            'iar_items_table.*',
+            'item_table.title as title',
+            'item_table.category as category_id',
+            'item_category_table.name as category_name',
+            'item_table.specifications',
+            'ris_items.all_request_qty',
+            DB::raw('SUM(
+                CASE WHEN iar_items_table.expiration_date IS NULL
+                OR (iar_items_table.expiration_date IS NOT NULL AND iar_items_table.expiration_date > '.Carbon::now()->toDateString().')
+                THEN iar_items_table.current_qty
+                ELSE 0 END) - (CASE WHEN ris_items.all_request_qty IS NULL THEN 0 ELSE ris_items.all_request_qty END)
+                as remaining_qty')
+            // DB::raw('IF(iar_items_table.expiration_date IS NULL, SUM(iar_items_table.current_qty), SUM(CASE WHEN iar_items_table.expiration_date > '.Carbon::now()->toDateString().' THEN iar_items_table.current_qty END)) as remaining_qty')
+        )
+        ->where(
+            [
+                'iar_items_table.receiving_office' => $office,
+                'item_table.category' => $category,
+                'iar_items_table.id' => $id
             ]
         )
         ->groupBy('iar_items_table.id')

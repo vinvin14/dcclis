@@ -11,6 +11,9 @@
         .minmax:hover{
             color: black;
         }
+        #item-thumbnail {
+            cursor: pointer;
+        }
     </style>
     <link href="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 @endsection
@@ -18,7 +21,7 @@
 
     <h2 class="mb-4">Current RIS</h2>
 
-    
+
     <a href="{{ route('ris.list') }}" class="font-weight-normal link-light"><i class="fas fa-angle-double-left"></i> Back to RIS List</a>
     <div class="card shadow-sm my-2">
         <div class="card-body">
@@ -64,7 +67,7 @@
                 <button class="btn btn-info my-1 btn-block" id="ris-update-trigger" data-id="{{ $ris->id }}">Update Information</button>
                 @endif
             </div>
-        </div>  
+        </div>
     </div>
     <hr>
     <div class="card shadow-sm my-3">
@@ -146,7 +149,7 @@
                         <label for="">Reason for Status</label>
                         <textarea name="reason_for_status" class="form-control" id="reason-for-status" cols="30" rows="10">  </textarea>
                     </div>
-                
+
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -157,7 +160,7 @@
         </div>
     </div>
     {{-- modal add items --}}
-  
+
     <div class="modal fade" id="add-item-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -177,8 +180,14 @@
                         @endforeach
                     </select>
                 </div>
-                <div id="ris-item-container">
-
+                <div class="row">
+                    <div class="col-8 border-right">
+                        <div class="row container" id="ris-item-container" style="max-height: 600px; overflow-y: auto">
+                            {{-- ajax items --}}
+                        </div>
+                    </div>
+                    <div class="col-4" id="ris-item-details">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -196,15 +205,15 @@
          $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         });
-        
+
         windowMaxMin('#minimize-ris', '#ris-container');
         windowMaxMin('#minimize-ris-items', '#ris-items-container');
 
         $(document).ready(function () {
-            
+
             $('#ris-update-trigger').click(function () {
                 var risID = $(this).data('id');
-              
+
                 $.ajax({
                     url: '/ajax/ris/'+risID,
                     type: 'get',
@@ -230,10 +239,10 @@
 
     </script>
     <!-- Page level plugins -->
-    
+
     <script src="{{ asset('includes/sbadmin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('includes/sbadmin/js/demo/datatables-demo.js') }}"></script>
-@endsection 
+@endsection

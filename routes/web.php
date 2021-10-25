@@ -30,7 +30,7 @@ Route::get('/', function () {
         Route::get('show/{iar}', 'IarController@show')->name('iar.show');
         Route::get('create', 'IarController@create')->name('iar.create');
         Route::get('edit/{iar}', 'IarController@edit')->name('iar.edit');
-        
+
         Route::put('update/{iar}', 'IarController@update')->name('iar.update');
         Route::post('store', 'IarController@store')->name('iar.store');
         Route::delete('destroy/{iar}', 'IarController@destroy')->name('iar.destroy');
@@ -65,7 +65,8 @@ Route::get('/', function () {
 
     Route::get('getrole', function () {
         return redirect(route('dashboard'))
-        ->withCookie(cookie()->forever('role', 'End User'));
+        ->withCookie(cookie()->forever('role', 'End User'))
+        ->withCookie(cookie()->forever('office', 1));
     });
 
 
@@ -73,7 +74,7 @@ Route::get('/', function () {
         Route::get('ris/{id}', 'AjaxController@getRis');
         Route::get('ris/items/{office}/{category}', 'AjaxController@getItemsForRis');
     });
-   
+
 
     Route::get('{role}/permissions', function ($role) {
         $permissions = [
@@ -96,7 +97,11 @@ Route::get('/', function () {
     });
 
     Route::get('getItems', function () {
-        return (new IARItemRepository)->getItemsByOffice(1, 1);
+        return (new IARItemRepository)->getIarItemsByOffice(1, 1);
+    });
+
+    Route::get('getitems/{office}/{category}/{1}', function ($office, $category, $id) {
+        return (new IARItemRepository())->getIarItem($id, $office, $category);
     });
 
     // Route::prefix('purchaseOrder')->group(function () {

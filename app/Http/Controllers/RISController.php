@@ -20,7 +20,7 @@ class RISController extends Controller
     }
 
     public function show($id)
-    {   
+    {
         return view('ris.index')
         ->with('ris', (new RisRepository())->getRisWIthJoin($id))
         ->with('ris_items', (new RisItemRepository())->getByRis($id))
@@ -32,7 +32,7 @@ class RISController extends Controller
     public function create(Request $request, RISServices $risServices)
     {
         $init = $risServices->store($request->cookie('office'));
-    
+
         if (@$init['error']) {
             return back()
             ->with('error', $init['error']);
@@ -61,7 +61,7 @@ class RISController extends Controller
         ->with('success', 'Request and Issuance Slip record has been successfully updated!');
     }
 
-    public function destroy(RIS $ris, RISServices $risServices) 
+    public function destroy(RIS $ris, RISServices $risServices)
     {
         $init = $risServices->destroy($ris);
 

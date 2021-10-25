@@ -19,4 +19,9 @@ class AjaxController extends Controller
     {
         return (new IARItemRepository())->getIarItemsByOffice($office, $category);
     }
+
+    public function getIarItem($id, $office, $category)
+    {
+        return (new IARItemRepository())->getIarItem($id, $office, $category);
+    }
 }
