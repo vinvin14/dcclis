@@ -14,16 +14,15 @@ class RisItemServices
 {
     public function store($request)
     {
-        $iar_item = IarItem::query()->find($request['iar_item_id']);
-        DB::beginTransaction();
-        try {
+        //check if item has been created
+        if ((new RisItemRepository())->isExisting($request['ris_id'], $request['iar_item_id'])) {
+            return ['error' => 'This item request been submitted previously, if you want to add additional quantity you can just update the Item request record!'];
+        }
 
-            DB::commit();
+        try {
             return RisItem::query()
             ->create($request);
-
         } catch (Exception $exception) {
-            DB::rollBack();
             return ['error' => $exception->getMessage()];
         }
     }
@@ -51,10 +50,10 @@ class RisItemServices
     {
         try {
             $iar_item = IarItem::query()->find($risItem->iar_item_id);
-            
+
             if ($iar_item->current_qty > $request['approved_qty']) {
                 $iar_item_qty = $iar_item->current_qty - $request['approved_qty'];
-                
+
             } else {
                 $iar_item_qty = 0;
                 $request['approved_qty'] = $iar_item->current_qty;
@@ -77,10 +76,10 @@ class RisItemServices
             if ( empty($ris_items)) {
                 return ['error' => 'No existing RIS Item(s) found!'];
             }
-            
-            foreach ($ris_items as $ris_item) 
+
+            foreach ($ris_items as $ris_item)
             {
-                if ($ris_item->price < 15000) 
+                if ($ris_item->price < 15000)
                 {
                     for ($x = 0; $x<=$ris_item->approved_qty; $x++) {
                             Ics::query()->create(
@@ -91,10 +90,10 @@ class RisItemServices
                                     'ris_id' => $ris_id,
                                 ]
                             );
-                    
+
                     }
-                } 
-                else 
+                }
+                else
                 {
                     for ($x = 0; $x<=$ris_item->approved_qty; $x++) {
                         Par::query()->create(
@@ -107,8 +106,8 @@ class RisItemServices
                         );
                         $ics = (new ParServices())->store(
                             [
-                                
-                                
+
+
                             ], $office);
                     }
                 }

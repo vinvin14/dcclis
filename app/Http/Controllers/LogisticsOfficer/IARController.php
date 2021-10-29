@@ -1,25 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\LogisticsOfficer;
 
+use App\Http\Controllers\Controller;
 use App\Http\Services\IARServices;
 use App\Models\Iar;
 use App\Repository\IARRepository;
 use App\Repository\PurchaseOrderRepository;
 use Illuminate\Http\Request;
 
-class IarController extends Controller
+class IARController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function list(IARRepository $iarRepository)
+    public function index(IARRepository $iarRepository, Request $request)
     {
-        return  $iarRepository->all();
-        return view('iar.list')
-        ->with('iar_lists', $iarRepository->all())
+        return view('iar.index')
+        ->with('iar', $iarRepository->all())
+        ->with('module', 'list')
         ->with('page', 'IAR');
     }
 
@@ -43,7 +44,7 @@ class IarController extends Controller
     public function store(Request $request, IARServices $iarServices)
     {
         $init = $iarServices->store($request->only(['pr_id', 'logistics_officer', 'ptr_number']));
-        dd($init);
+
         if (@$init['error']) {
             return back()
             ->with('error', $init['error']);
@@ -96,7 +97,7 @@ class IarController extends Controller
             return back()
             ->with('error', $init['error']);
         }
-        
+
         return redirect('iar.show', $iar->id)
         ->with('success', 'IAR record has been successfully updated!');
     }
@@ -123,7 +124,7 @@ class IarController extends Controller
     public function createItemsFromPO($id, $po_number, PurchaseOrderRepository $purchaseOrderRepository, IARServices $iarServices)
     {
         $iarItems = $purchaseOrderRepository->getItems($po_number);
-        
+
         $init = $iarServices->createItemsFromPO($id, $iarItems);
 
         if (@$init['error']) {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\EndUser;
 
+use App\Http\Controllers\Controller;
 use App\Http\Services\RisItemServices;
 use App\Models\RIS;
 use App\Models\RisItem;
@@ -38,7 +39,7 @@ class RisItemController extends Controller
             ->with('error', $init['error']);
         }
 
-        return redirect(route('ris.show', $request['ris_id']))
+        return redirect(route('ris.enduser.show', $request['ris_id']))
         ->with('success', 'Item has been successfully added to your RIS record!');
     }
 

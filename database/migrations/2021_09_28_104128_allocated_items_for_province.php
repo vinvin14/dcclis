@@ -25,8 +25,8 @@ class AllocatedItemsForProvince extends Migration
             $table->string('recipient');
             $table->timestamps();
 
-            $table->foreign('allocation_list_id')->references('id')->on('allocation_list_for_province')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('iar_item_id')->references('id')->on('iar_items_table')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('allocation_list_id')->references('id')->on('allocation_list_for_province');
+            $table->foreign('iar_item_id')->references('id')->on('iar_items_table');
         });
     }
 

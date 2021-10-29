@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class RISRepository
 {
-    public function all(int $office)
+    public function all($office)
     {
         $query = DB::table('ris_table')
                 ->leftJoin('ris_items_table', 'ris_table.id', '=', 'ris_items_table.ris_id')
@@ -22,7 +22,7 @@ class RISRepository
 
         if (!empty ($office))
         {
-            $query = $query->where('requesting_office', $office);
+            $query = $query->where('requesting_office', intval($office));
         }
 
         return $query->get();

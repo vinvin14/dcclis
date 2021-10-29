@@ -42,9 +42,19 @@ class RisItemRepository
         ->first();
     }
 
-    public function hasReference($id)
+    public function isExisting($ris_id, $iar_item_id)
     {
-        
+        $isExisiting = RisItem::query()
+        ->where([
+            'ris_id' => $ris_id,
+            'iar_item_id' => $iar_item_id
+        ])
+        ->first();
+
+        if ($isExisiting) {
+            return true;
+        }
+        return false;
     }
 
     public function getApprovedRisItems($ris_id)

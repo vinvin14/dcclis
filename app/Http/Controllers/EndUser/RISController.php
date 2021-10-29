@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\EndUser;
 
+use App\Http\Controllers\Controller;
 use App\Http\Services\RISServices;
 use App\Repository\RISRepository;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use App\Repository\RisItemRepository;
 
 class RISController extends Controller
 {
-    public function list(Request $request)
+    public function index(Request $request)
     {
         return view('ris.index')
         ->with('ris', (new RISRepository())->all($request->cookie('office')))
@@ -37,7 +38,7 @@ class RISController extends Controller
             return back()
             ->with('error', $init['error']);
         }
-        return redirect(route('ris.show', $init->id))
+        return redirect(route('ris.enduser.show', $init->id))
         ->with('success', 'Request and Issuance Slip record has been created, you can now add some items!');
     }
 
@@ -61,16 +62,15 @@ class RISController extends Controller
         ->with('success', 'Request and Issuance Slip record has been successfully updated!');
     }
 
-    public function destroy(RIS $ris, RISServices $risServices)
+    public function destroy(RIS $enduser, RISServices $risServices)
     {
-        $init = $risServices->destroy($ris);
-
+        $init = $risServices->destroy($enduser);
         if (@$init['error']) {
             return back()
             ->with('error', $init['error']);
         }
 
-        return redirect(route('ris.list'))
+        return redirect(route('ris.enduser.list'))
         ->with('success', 'Request and Issucance Slip record has been deleted!');
     }
 }

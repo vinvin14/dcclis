@@ -7,9 +7,7 @@
 @section('page')
 
     <h2 >Requests & Issuances</h2>
-    <p class="text-muted font-italic">In this page you will be able to manage all RIS filed by your office</p>
-
-    <a href="{{ route('ris.enduser.create') }}" onclick="return confirm('Are you sure you want to create this request?')" class="btn btn-info shadow-sm"><i class="fas fa-plus"></i> Create new RIS</a>
+    <p class="text-muted font-italic">In this page you will be able to manage all RIS filed by different office</p>
     @include('interface.prompt.system-message')
     <div class="card shadow-sm my-3">
         <div class="card-body">
@@ -34,13 +32,9 @@
                                 <td>{{ $row->status }}</td>
                                 <td>{{ $row->issuance_status }}</td>
                                 <td>
-                                    <div class="d-flex">
-                                        <a href="{{ route('ris.enduser.show', $row->id) }}" class="mx-2" data-toggle="tooltip" data-placement="left" title="View RIS"><i class="fas fa-eye"></i></a>
-                                        <form action="{{ route('ris.enduser.destroy', $row->id) }}" method="post">
-                                            @method('delete')
-                                            <button type="submit" style="border: none;background-color:transparent" class="mx-2 text-danger" data-toggle="tooltip" data-placement="left" title="Delete this RIS" onclick="return confirm('Are you sure you want to delete this record?')"><i class="far fa-trash-alt"></i></button>
-                                        </form>
-                                    </div>
+                                    <a href="{{ route('ris.show', $row->id) }}" class="mx-2" data-toggle="tooltip" data-placement="left" title="View RIS"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('ris.destroy', $row->id) }}" class="mx-2 text-danger" data-toggle="tooltip" data-placement="left" title="Delete this RIS" onclick="return confirm('Are you sure you want to delete this record?')"><i class="far fa-trash-alt"></i></a>
+
                                 </td>
                             </tr>
                         @endforeach

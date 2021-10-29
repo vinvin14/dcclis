@@ -112,6 +112,53 @@
         </div>
     </div>
 
+
+    {{-- modal update --}}
+    <div class="modal fade" id="ris-update-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Update <span class="font-weight-bold">{{ $ris->ris_number }}</span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <form action="{{ route('ris.update', $ris->id) }}" method="post">
+            <div class="modal-body">
+                    @method('put')
+                    @if (Cookie::get('role') == 'Super Admin')
+                    <div class="form-group">
+                        <label for="">Approved By</label>
+                        <input type="text" name="approved_by" id="approved-by" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Approved Date</label>
+                        <input type="text" name="date_approved" id="date-approved" class="form-control">
+                    </div>
+                    @endif
+                    <div class="form-group">
+                        <label for="">Status <span class="text-danger">*</span></label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">-</option>
+                            <option value="approved">Approved</option>
+                            <option value="declined">Declined</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Reason for Status</label>
+                        <textarea name="reason_for_status" class="form-control" id="reason-for-status" cols="30" rows="10">  </textarea>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            </form>
+            </div>
+        </div>
+        </div>
+    </div>
     {{-- modal add items --}}
 
     <div class="modal fade" id="add-item-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

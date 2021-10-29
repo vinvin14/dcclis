@@ -9,7 +9,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Options:</h6>
             <a class="collapse-item" href="cards.html">Items for RIS</a>
-            <a class="collapse-item" href="{{route('ris.list')}}">RIS List</a>
+            <a class="collapse-item" href="{{route('ris.enduser.list')}}">RIS List</a>
             <a class="collapse-item" href="buttons.html">Create RIS</a>
         </div>
     </div>

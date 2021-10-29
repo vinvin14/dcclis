@@ -1,16 +1,16 @@
 
 <!-- Nav Item - Pages Collapse Menu -->
 <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseIAR"
+    <div class="nav-link collapsed" data-toggle="collapse" data-target="#collapseIAR"
         aria-expanded="true" aria-controls="collapseTwo">
         <i class="fas fa-boxes"></i>
-        <span class="font-weight-bold">IAR</span>
-    </a>
+        <span style="cursor: pointer" class="font-weight-bold">IAR</span>
+</div>
     <div id="collapseIAR" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Options:</h6>
-            <a class="collapse-item" href="cards.html">IAR List</a>
-            <a class="collapse-item" href="buttons.html">Create an IAR</a>
+            <a class="collapse-item" href="{{ route('iar.logisticsOfficer.list') }}">IAR List</a>
+            <a class="collapse-item" href="{{ route('iar.logisticsOfficer.create') }}">Create an IAR</a>
         </div>
     </div>
 </li>

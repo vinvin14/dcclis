@@ -48,9 +48,9 @@ class IARItemRepository
         ->select(
             'iar_items_table.*',
             'item_table.title as title',
-            'item_table.category as category_id',
-            'item_category_table.name as category_name',
-            'item_table.specifications',
+            // 'item_table.category as category_id',
+            // 'item_category_table.name as category_name',
+            // 'item_table.specifications',
             'ris_items.all_request_qty',
             DB::raw('SUM(
                 CASE WHEN iar_items_table.expiration_date IS NULL
@@ -71,7 +71,7 @@ class IARItemRepository
         ->get();
     }
 
-    public function getIarItem($id, $office, $category)
+    public function getIarItem($office, $id)
     {
         $ris_items = DB::table('ris_items_table')
         ->leftJoin('ris_table', 'ris_items_table.ris_id', '=', 'ris_table.id')
@@ -96,9 +96,6 @@ class IARItemRepository
         ->select(
             'iar_items_table.*',
             'item_table.title as title',
-            'item_table.category as category_id',
-            'item_category_table.name as category_name',
-            'item_table.specifications',
             'ris_items.all_request_qty',
             DB::raw('SUM(
                 CASE WHEN iar_items_table.expiration_date IS NULL
@@ -111,13 +108,12 @@ class IARItemRepository
         ->where(
             [
                 'iar_items_table.receiving_office' => $office,
-                'item_table.category' => $category,
                 'iar_items_table.id' => $id
             ]
         )
         ->groupBy('iar_items_table.id')
         ->having('remaining_qty', '!=', 0)
-        ->get();
+        ->first();
     }
 
     public function hasIssued($id)

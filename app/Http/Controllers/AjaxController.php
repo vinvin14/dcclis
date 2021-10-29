@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\RIS;
 use App\Repository\IARItemRepository;
-use App\Repository\RISRepository;
-use Illuminate\Http\Request;
 
 class AjaxController extends Controller
 {
@@ -20,8 +18,8 @@ class AjaxController extends Controller
         return (new IARItemRepository())->getIarItemsByOffice($office, $category);
     }
 
-    public function getIarItem($id, $office, $category)
+    public function getIarItem($office, $id)
     {
-        return (new IARItemRepository())->getIarItem($id, $office, $category);
+        return (new IARItemRepository())->getIarItem($office, $id);
     }
 }

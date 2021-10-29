@@ -10,9 +10,9 @@ class RisItem extends Model
     use HasFactory;
 
     public $table = 'ris_items_table';
-    
+
     protected $fillable = [
-        'ris',
+        'ris_id',
         'iar_item_id',
         'request_qty',
         'approved_qty',

@@ -12,9 +12,10 @@ class RISServices
     public function store($office)
     {
         try {
-            $request['ris_number'] = $this->generateRisNum($office);
-            $request['requesting_office'] = $office;
-            return RIS::query()->create($request);
+            return RIS::query()->create([
+                'ris_number' => $this->generateRisNum($office),
+                'requesting_office' => $office
+            ]);
         } catch (Exception $exception) {
             return ['error' => $exception->getMessage()];
         }
@@ -33,7 +34,7 @@ class RISServices
     public function destroy($ris)
     {
         // dd($ris);
-        
+
         if ((new RISRepository())->hasRisItems($ris->id)) {
             return ['error' => 'cannot be deleted since it has existing items recorded!'];
         }

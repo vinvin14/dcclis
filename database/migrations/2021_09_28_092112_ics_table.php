@@ -23,7 +23,7 @@ class IcsTable extends Migration
             $table->string('property_number')->unique()->nullable();
             $table->timestamps();
 
-            $table->foreign('ris_item_id')->references('id')->on('ris_items_table')->onDelete('restrict');
+            $table->foreign('ris_item_id')->references('id')->on('ris_items_table');
         });
     }
 
