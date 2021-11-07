@@ -25,6 +25,7 @@ class IarItemsTable extends Migration
             $table->enum('status', ['cleared','for_replacement','cancelled'])->nullable();
             $table->date('expiration_date')->nullable();
             $table->string('lot_batch_number')->nullable();
+            $table->string('recorded_by')->nullable();
 
             $table->foreign('iar_id')->references('id')->on('iar_table');
             $table->timestamps();

@@ -173,7 +173,7 @@
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 ">{{session('user')}}</span>
+                    <span class="text-truncate mr-2 d-none d-lg-inline text-gray-600 text-center" style="width: 120px">{{Auth::user()->given_name}}</span>
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

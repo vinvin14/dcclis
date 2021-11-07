@@ -2,47 +2,67 @@
 
 namespace App\Http\Services;
 
-use App\Models\AccountRole;
-use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
+use App\Models\User;
+
 
 class AccountServices
 {
-    public function getRole($id)
-    {
-        DB::connection('gatekeeper')
-        ->table('roles')
-        ->leftJoin('permissions', 'roles.id', '=', 'permissions.role_id')
-        ->select(
-            'roles.*',
-            'permissions.name as permission'
-        )
-        ->where('roles.user_id', $id)
-        ->get();
-    }
-
     public function getPermissions($id)
     {
-        DB::connection('getekeeper')
-        ->table('permissions')
-        ->where('')
-        ->get();
+        $user = User::query()
+        ->with('roles.permissions')
+        ->find($id);
+        
+        $permissions = [];
+        
+        foreach ($user->roles as $role)
+        {            
+            foreach ($role->permissions as $permission) 
+            {
+                $permission = explode(':', $permission->name);
+                $permissions[$permission[0]][] = $permission[1];
+            }
+        }
+
+        return $permissions;
     }
 
-    public function organizePermissions($user)
+    public function getRoles($id)
     {
-        $role = [];
-        $permissions = [];
+        $user = User::query()
+        ->with('roles.permissions')
+        ->find($id);
 
+        $roles = [];
+        
+        foreach ($user->roles as $role)
+        {            
+            array_push($roles, $role->name);
+        }
+
+        return $roles;
+    }
+
+    public function organizePermissions($id)
+    {
+        $user = User::query()
+        ->with('roles.permissions')
+        ->find($id);
+        
+        $roles = [];
+        $permissions = [];
 
         foreach ($user->roles as $role)
         {
-            $permission = explode(':', $permission);
-            $new_permissions[$permission[0]][] = $permission[1];
+            array_push($roles, $role->name);
+            
+            foreach ($role->permissions as $permission) 
+            {
+                $permission = explode(':', $permission->name);
+                $permissions[$permission[0]][] = $permission[1];
+            }
         }
-
-        return $new_permissions;
+      
+        return [$roles, $permissions];
     }
-
 }

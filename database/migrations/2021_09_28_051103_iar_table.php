@@ -17,8 +17,10 @@ class IarTable extends Migration
             $table->id('id');
             $table->string('iar_number')->unique();
             $table->unsignedBigInteger('pr_id')->nullable();
+            $table->string('po_number')->unique()->nullable();
             $table->string('ptr_number')->nullable();
             $table->string('logistics_officer')->nullable();
+            $table->date('date_of_delivery')->nullable();
             $table->timestamps();
         });
     }

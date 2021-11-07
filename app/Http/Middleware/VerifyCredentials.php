@@ -6,7 +6,9 @@ use App\Http\Services\AccountServices;
 use App\Models\Role;
 use App\Models\User;
 use Closure;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class VerifyCredentials
@@ -20,20 +22,22 @@ class VerifyCredentials
      */
     public function handle(Request $request, Closure $next)
     {
-        // if (empty($request->cookie('user_id'))) {
-        //     return Redirect::to(env('GATEKEEPER_HOST').'/login');
-        // }
+        if (! Auth::check()) {
+            return Response('No valid credentials');
+        }
+        
+        if (empty($request->cookie('role')))
+        {
+            $role = (new AccountServices())->getRoles(Auth::id());
+            if (count($role) > 1)  
+            {
+               return redirect(route('account.role.verify'));
+            }
 
-        $user = User::query()
-        ->with('roles.permissions')
-        ->find($request->cookie('user_id'));
-
-        dd($user);
-            dd((new AccountServices())->organizePermissions($user));
-        view()->share('permissions', (new AccountServices())->organizePermissions($role->permissions->toArray()));
-
+            $cookieRole = $role;
+        }
+        $cookieRole = $request->cookie('role');
         return $next($request)
-        ->withCookie(cookie()->forever('role', $role->name))
-        ->withCookie(cookie()->forever('permissions', serialize($role->permissions)));
+            ->withCookie(cookie()->forever('role', $cookieRole));
     }
 }

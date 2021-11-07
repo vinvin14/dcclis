@@ -21,4 +21,10 @@ class RisItem extends Model
         'created_at',
         'updated_at'
     ];
+
+    public function iar_item()
+    {
+        return $this->belongsToMany(IarItem::class, 'iaritems_risitems', 'risitem_id', 'iaritem_id')
+        ->withTimestamps();
+    }
 }

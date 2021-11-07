@@ -28,11 +28,11 @@
         Requests
     </div>
     @if (Cookie::get('role') == 'End User')
-        @include('interface.enduser.sidebar')
+        @include('enduser.sidebar')
     @endif
 
     @if (Cookie::get('role') == 'Logistics Officer')
-        @include('interface.logisticsofficer.sidebar')
+        @include('logisticsofficer.sidebar')
     @endif
     <!-- Divider -->
     <hr class="sidebar-divider">

@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Permission extends Model
+class Office extends Model
 {
     use HasFactory;
 
     protected $connection = 'gatekeeper';
-    protected $table = 'permissions';
+    
+    public function iar_item()
+    {
+        return $this->belongsToMany(IarItem::class, 'receiving_office');
+    }
 }

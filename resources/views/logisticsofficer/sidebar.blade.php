@@ -9,8 +9,8 @@
     <div id="collapseIAR" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">Options:</h6>
-            <a class="collapse-item" href="{{ route('iar.logisticsOfficer.list') }}">IAR List</a>
-            <a class="collapse-item" href="{{ route('iar.logisticsOfficer.create') }}">Create an IAR</a>
+            <a class="collapse-item" href="{{ route('logisticsofficer.iar.index') }}">IAR List</a>
+            <a class="collapse-item" href="{{ route('logisticsofficer.iar.create') }}">Create an IAR</a>
         </div>
     </div>
 </li>

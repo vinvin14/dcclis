@@ -7,6 +7,7 @@ use App\Models\IarItem;
 use App\Repository\IARRepository;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class IARServices
@@ -15,6 +16,7 @@ class IARServices
     {
         try {
             $request['iar_number'] = $this->generateIARNum();
+            $request['logistics_officer'] = Auth::user()->given_name;
             
             return Iar::query()
             ->create($request);
@@ -70,11 +72,11 @@ class IARServices
         $currentIarNum = $iarRepository->getCurrentIARNum();
 
         if (empty($currentIarNum)) {
-            $iarNum = Carbon::now()->year.'-'.$stringServices->threeCodeFormat(Carbon::now()->month).'-'.'00001';
+            $iarNum = 'IAR'.Carbon::now()->year.'-'.$stringServices->threeCodeFormat(Carbon::now()->month).'-'.'00001';
         }
         else {
             list(,,$increment) = explode('-', $currentIarNum);
-            $iarNum = Carbon::now()->year.'-'.$stringServices->threeCodeFormat(Carbon::now()->month).'-'.$stringServices->fiveCodeFormat(intval($increment)+1);
+            $iarNum = 'IAR'.Carbon::now()->year.'-'.$stringServices->threeCodeFormat(Carbon::now()->month).'-'.$stringServices->fiveCodeFormat(intval($increment)+1);
         }
 
         return $iarNum;

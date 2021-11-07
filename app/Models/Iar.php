@@ -14,8 +14,15 @@ class Iar extends Model
         'iar_number',
         'pr_id',
         'ptr_number',
+        'po_number',
         'logistics_officer',
+        'date_of_delivery',
         'created_at',
         'updated_at'
     ];
+
+    public function iarItem()
+    {
+        return $this->hasMany(IarItem::class);
+    }
 }

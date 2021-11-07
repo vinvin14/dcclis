@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Services\IARServices;
 use App\Models\Iar;
 use App\Repository\IARRepository;
+use App\Repository\ItemRepository;
 use App\Repository\PurchaseOrderRepository;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,9 @@ class IARController extends Controller
      */
     public function index(IARRepository $iarRepository, Request $request)
     {
-        return view('iar.index')
+        return view('logisticsofficer.index')
         ->with('iar', $iarRepository->all())
-        ->with('module', 'list')
+        ->with('module', 'iar.list')
         ->with('page', 'IAR');
     }
 
@@ -31,7 +32,8 @@ class IARController extends Controller
      */
     public function create()
     {
-        return view('iar.create')
+        return view('logisticsofficer.index')
+        ->with('module', 'iar.create')
         ->with('page', 'IAR');
     }
 
@@ -43,16 +45,17 @@ class IARController extends Controller
      */
     public function store(Request $request, IARServices $iarServices)
     {
-        $init = $iarServices->store($request->only(['pr_id', 'logistics_officer', 'ptr_number']));
+        $this->authorize('create', Iar::class);
+        
+
+        $init = $iarServices->store($request->only(['ptr_number', 'po_number', 'date_of_delivery']));
 
         if (@$init['error']) {
             return back()
             ->with('error', $init['error']);
         }
 
-        return $init;
-
-        return redirect(route('iar.show', $init->id))
+        return redirect(route('logisticsofficer.iar.show', $init->id))
         ->with('success', 'IAR Record has been created');
     }
 
@@ -64,8 +67,13 @@ class IARController extends Controller
      */
     public function show(Iar $iar)
     {
-        return view('iar.show')
+        $iar->load('iarItem.item');
+        // $this->authorize('show', Iar::class);
+        
+        return view('logisticsofficer.index')
         ->with(compact('iar'))
+        ->with('item_categories', (new ItemRepository())->getCategories())
+        ->with('module', 'iar.show')
         ->with('page', 'IAR');
     }
 
@@ -77,8 +85,9 @@ class IARController extends Controller
      */
     public function edit(Iar $iar)
     {
-        return view('iar.edit')
+        return view('logisticsofficer.index')
         ->with(compact('iar'))
+        ->with('module', 'iar.edit')
         ->with('page', 'IAR');
     }
 
@@ -91,7 +100,8 @@ class IARController extends Controller
      */
     public function update(Request $request, Iar $iar, IARServices $iarServices)
     {
-        dd($request->post());
+        $this->authorize('update', Iar::class);
+
         $init = $iarServices->update($iar, $request->only(['pr_id', 'logistics_officer', 'ptr_number']));
         if (@$init['error']) {
             return back()
@@ -110,6 +120,8 @@ class IARController extends Controller
      */
     public function destroy(Iar $iar, IARServices $iarServices)
     {
+        $this->authorize('destroy', Iar::class);
+        
         $init = $iarServices->destroy($iar);
 
         if (@$init['error']) {

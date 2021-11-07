@@ -24,4 +24,20 @@ class IarItem extends Model
         'updated_at'
 
     ];
+
+    public function ris_item()
+    {
+        return $this->belongsToMany(RisItem::class, 'iaritems_risitems', 'iaritem_id', 'risitem_id')
+        ->withTimestamps();
+    }
+
+    public function item()
+    {
+        return $this->hasOne(Item::class);
+    }
+
+    public function office()
+    {
+        return $this->hasOne(Office::class);
+    }
 }

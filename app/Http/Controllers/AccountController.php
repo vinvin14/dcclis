@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Services\AccountServices;
 use Illuminate\Http\Request;
 
-class AccountController extends Controller
+class AccountController extends BaseController
 {
     // public function login(Request $request, AccountServices $accountServices)
     // {
@@ -21,9 +20,16 @@ class AccountController extends Controller
     //     ->withCookie(cookie('roles', $init['roles']));
     // }
 
-    public function getRole()
+    public function AccountVerify(Request $request)
     {
+        return view('account.verifyrole')
+        ->with('roles', $this->roles());
+    }
 
+    public function confirmRole(Request $request)
+    {
+        return redirect(route('dashboard'))
+        ->withCookie(cookie()->forever('role', $request->get('role')));
     }
 
 }

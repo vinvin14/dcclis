@@ -8,7 +8,7 @@
     <h2 >Inspection and Acceptance Report(s)</h2>
     <p class="text-muted font-italic">In this page you will be able to manage all IAR filed by different offices</p>
 
-    <a href="{{ route('iar.logisticsOfficer.create') }}" class="btn btn-info shadow-sm"><i class="fas fa-plus"></i> Create new IAR</a>
+    <a href="{{ route('logisticsofficer.iar.create') }}" class="btn btn-info shadow-sm"><i class="fas fa-plus"></i> Create new IAR</a>
     @include('interface.prompt.system-message')
     <div class="card shadow-sm my-3">
         <div class="card-body">
@@ -38,9 +38,9 @@
                                 <td>{{ $row->logistics_officer }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a href="{{ route('iar.logisticsOfficer.show', $row->id) }}" class="mx-2" data-toggle="tooltip" data-placement="left" title="View IAR"><i class="fas fa-eye"></i></a>
+                                        <a href="{{ route('logisticsofficer.iar.show', $row->id) }}" class="mx-2" data-toggle="tooltip" data-placement="left" title="View IAR"><i class="fas fa-eye"></i></a>
                                         @if (in_array('destroy', unserialize(Cookie::get('permissions'))['iar']))
-                                        <form action="{{ route('iar.logisticsOfficer.destroy', $row->id) }}" method="post">
+                                        <form action="{{ route('logisticsofficer.iar.destroy', $row->id) }}" method="post">
                                             @method('delete')
                                             <button type="submit" style="border: none;background-color:transparent" class="mx-2 text-danger" data-toggle="tooltip" data-placement="left" title="Delete this IAR" onclick="return confirm('Are you sure you want to delete this record?')"><i class="far fa-trash-alt"></i></button>
                                         </form>
