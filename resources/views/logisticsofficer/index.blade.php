@@ -1,4 +1,4 @@
-@extends('interface.main')
+@extends('layout.main')
 
 @section('page')
     @includeWhen(Cookie::get('role') == 'End User',"enduser.$module")

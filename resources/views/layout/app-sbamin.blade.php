@@ -18,10 +18,18 @@
     <link href="{{asset('includes/sbadmin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
 
     <!-- Custom styles for this template-->
-    <link href="{{asset('includes/sbadmin/css/sb-admin-2.min.css')}}" rel="stylesheet">
+    {{-- <link href="{{asset('includes/sbadmin/css/sb-admin-2.min.css')}}" rel="stylesheet"> --}}
+    <link href="{{asset('themes/sbadminb5/css/styles.css')}}" rel="stylesheet">
     <style>
         * {
             font-size: 15px;
+        }
+        .cursor {
+            cursor: pointer;
+            opacity: .8;
+        }
+        .cursor:hover {
+            opacity: 1;
         }
     </style>
     @yield('styles')
@@ -38,7 +46,9 @@
 {{-- <script src="{{asset('includes/sbadmin/vendor/jquery-easing/jquery.easing.min.js')}}"></script> --}}
 
 <!-- Bootstrap core JavaScript-->
-<script src="{{asset('includes/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+{{-- <script src="{{asset('includes/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+ --}}
+ {{-- <script src="{{asset('includes/bootstrap-5.1.3/js/bootstrap.bundle.min.js')}}"></script> --}}
 
 
 <!-- Custom scripts for all pages-->

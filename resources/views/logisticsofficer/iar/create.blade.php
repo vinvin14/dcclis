@@ -1,19 +1,17 @@
-@extends('interface.main')
+@extends('layout.main')
 @section('title', 'Inspection & Acceptance Report')
 @section('styles')
     <!-- Custom styles for this page -->
     <link href="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 @endsection
 @section('page')
-    <a href="{{ route('logisticsofficer.iar.index') }}" class="font-weight-normal link-light"><i class="far fa-arrow-alt-circle-left"></i> Back to IAR List</a>
-    <div class="card shadow-sm w-50 mt-2">
-        <div class="card-header">
-            Create new IAR
-        </div>
+    {{-- <a href="{{ route('logisticsofficer.iar.index') }}" class="font-weight-normal"><i class="far fa-arrow-alt-circle-left"></i> Back to IAR List</a> --}}
+    <h3>Create Inspection & Acceptance Report</h3>
+    <div class="card w-50 mt-3 shadow-sm">
         <div class="card-body container">
             <form action="{{ route('logisticsofficer.iar.store') }}" method="post">
                 @csrf
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="" class="font-weight-bold">Source</label>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="source" id="ptr" value="option1">
@@ -28,22 +26,25 @@
                         </label>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="" class="font-weight-bold">Date of Delivery</label>
                     <input type="date" name="date_of_delivery" class="form-control" required>
                 </div>
-                <div class="form-group" id="ptr-container" style="display: none">
+                <div class="mb-3" id="ptr-container" style="display: none">
                     <label for="" class="font-weight-bold">PTR #</label>
                     <input type="text" name="ptr_number" class="form-control" id="ptr-number">
                 </div>
-                <div class="form-group" id="po-container" style="display: none">
+                <div class="mb-3" id="po-container" style="display: none">
                     <label for="" class="font-weight-bold">Purchase Order #</label>
                     <input type="text" name="po_number" class="form-control" id="po-number">
                 </div>
-                <button class="btn btn-primary btn-block">Create this Record</button>
+                <div class="mt-2">
+                    <a href="{{ route('logisticsofficer.iar.index') }}" class="btn btn-danger" role="button">Cancel</a>
+                    <button class="btn btn-primary mt-1 float-end">Create this Record</button>
+                </div>
             </form>
-        </div>    
-    </div>  
+        </div>
+    </div>
 @endsection
 @section('scripts')
     <script>
@@ -60,7 +61,7 @@
 
                 poField.prop('required', true);
                 ptrField.prop('required', false);
-                
+
             });
 
             $('#ptr').click(function () {

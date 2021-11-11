@@ -9,23 +9,12 @@ function interfaceAddIarItem(index)
                 // '<div><textarea class="form-control" readonly="true">'+index.specification+'</textarea></div>' +
             '</div>' +
         '</div>' +
-    '</div>'  
+    '</div>'
 
-    
+
 }
 
-function qtyTicker(add, deduct, target)
-{
-    add.click( function () {
-        target.val(parseInt( target.val() ) + 1);
-    });
 
-    deduct.click( function () {
-        if ( target.val() < 2 ) {
-            alert('Quantity cannot be zero!');
-            target.val(1);
-            return false;
-        }
-        target.val(parseInt( target.val() ) - 1);
-    });
-}
+
+
+

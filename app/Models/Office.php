@@ -10,9 +10,9 @@ class Office extends Model
     use HasFactory;
 
     protected $connection = 'gatekeeper';
-    
+
     public function iar_item()
     {
-        return $this->belongsToMany(IarItem::class, 'receiving_office');
+        return $this->hasMany(IarItem::class);
     }
 }

@@ -16,6 +16,7 @@ class IarItem extends Model
         'issued_qty',
         'iar_id',
         'item_id',
+        'price',
         'receiving_office',
         'status',
         'expiration_date',
@@ -33,11 +34,11 @@ class IarItem extends Model
 
     public function item()
     {
-        return $this->hasOne(Item::class);
+        return $this->belongsTo(Item::class);
     }
 
     public function office()
     {
-        return $this->hasOne(Office::class);
+        return $this->belongsTo(Office::class, 'receiving_office');
     }
 }

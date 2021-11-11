@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\Iar;
 use App\Models\Item;
 use App\Models\ItemCategory;
+use App\Models\Office;
 use App\Models\Role;
 use App\Models\User;
 use App\Repository\IARItemRepository;
@@ -50,11 +52,16 @@ Route::middleware([
     Route::get('dashboard', 'MainController@dashboard')->name('dashboard');
     Route::group([
         // 'middleware' => 'iar',
-        'prefix' => 'logisticsofficer',  
+        'prefix' => 'logisticsofficer',
         'as' => 'logisticsofficer.'
     ], function () {
         Route::resource('iar', 'LogisticsOfficer\IARController');
-        // Route::resource('iar.item', 'LogisticsOfficer\IARC');
+        Route::group([
+            'prefix' => 'iar',
+            'as' => 'iar'
+        ], function () {
+                Route::resource('item', 'LogisticsOfficer\IARItemController');
+        });
 
         Route::get('ris', 'LogisticsOfficer\RISController@index')->name('logisticsofficer.ris.list');
         Route::get('ris/{id}', 'LogisticsOfficer\RISController@show')->name('logisticsofficer.ris.show');
@@ -77,13 +84,12 @@ Route::middleware([
         ], function () {
             Route::resource('enduser', 'EndUser\RisItemController');
 
-            
+
             // Route::resource('logisticsofficer', 'LogisticsOfficer\RISItemController');
         });
     });
-   
-});
 
+});
 
 Route::prefix('account')->group(function () {
     Route::get('role/verify', 'AccountController@AccountVerify')->name('account.role.verify');
@@ -92,11 +98,6 @@ Route::prefix('account')->group(function () {
         dd($request->cookie('role'));
     });
 });
-
-
-
-
-
 
 
     Route::get('items', function () {
@@ -113,8 +114,14 @@ Route::prefix('account')->group(function () {
            echo @$item->itemCategory->name.'<br>';
         }
     });
-    Route::view('dashboard', 'dashboard')->name('dashboard');
 
+    Route::get('iar/{id}', function ($id) {
+        return Iar::with('iarItem')->where('id', $id)->get();
+    });
+    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('sbadminb5', function () {
+        return view('layout.sbadminb5.index');
+    });
 
     Route::get('getrole/logistics', function () {
         return redirect(route('dashboard'))
@@ -128,12 +135,17 @@ Route::prefix('account')->group(function () {
     Route::prefix('ajax')->group(function () {
         Route::get('ris/{id}', 'AjaxController@getRis');
         Route::get('iar/items/forris/{office}/{category}', 'AjaxController@getItemsForRis');
-        
+
         Route::get('iar/item/{office}/{id}', 'AjaxController@getIarItem');
     });
 
     Route::prefix('axios')->group(function () {
         Route::get('items', 'AxiosController@itemsByCategory');
+        Route::get('offices', 'AxiosController@offices');
+
+        //iar item
+        Route::get('iar/item', 'AxiosController@getIarItem');
+        Route::put('iar/item/{id}', 'AxiosController@udpateIarItem');
     });
 
 

@@ -3,6 +3,7 @@
 @section('styles')
     <!-- Custom styles for this page -->
     <link href="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{asset('includes/bootstrap-5.1.3/css/bootstrap.min.css') }}" rel="stylesheet"> --}}
     <style>
         .modal-lg{
             max-width: 80%;
@@ -16,17 +17,28 @@
         #item-thumbnail {
             cursor: pointer;
         }
+        #change-title-trigger {
+            cursor: pointer;
+            color: #C0C0C0;
+        }
+        #change-title-trigger:hover {
+            color: #67B4E9;
+        }
     </style>
 @endsection
 @section('page')
 <a href="{{ route('logisticsofficer.iar.index') }}" class="font-weight-normal link-light"><i class="far fa-arrow-alt-circle-left"></i> Back to IAR List</a>
     <div class="row mt-2">
-        <div class="col-xs-12 col-md-3 col-lg-3">
+        <div class="col-xs-12 col-md-2 col-lg-2">
             <div class="card shadow-sm">
-                <div class="card-header">
+                <div class="card-header font-weight-bold">
                     IAR Details
                 </div>
                 <div class="card-body">
+                    <div class="form-group">
+                        <label for="" class="font-weight-bold">IAR Number</label>
+                        <div>{{ $iar->iar_number }}</div>
+                    </div>
                     <div class="form-group">
                         <label for="" class="font-weight-bold">Date of Delivery</label>
                         {{-- <div>{{ \Carbon\Carbon::parse($iar->date_of_delivery)->format('F')  }}</div> --}}
@@ -51,13 +63,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-9 col-lg-9">
+        <div class="col-xs-12 col-md-10 col-lg-10 border-left">
             <div class="card shadow-sm">
-                <div class="card-header">
+                <div class="card-header font-weight-bold">
                     IAR Items
                 </div>
                 <div class="card-body">
-                    <button class="btn btn-info mb-2" id="iar-item-trigger"><i class="fas fa-plus"></i> Add IAR Item</button>
+                    <button class="btn btn-info mb-3" id="iar-item-trigger" data-id="{{ $iar->id }}"><i class="fas fa-plus"></i> Add IAR Item</button>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
@@ -66,21 +78,31 @@
                                 <th>Office/Section</th>
                                 <th>Current Qty</th>
                                 <th>Issued Qty</th>
+                                <th>Price</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
+
                                 @foreach ($iar->iarItem as $row)
+
                                     <tr>
                                         <td>{{ $row->item->title }}</td>
-                                        <td>{{ $row->item->office->name }}</td>
+                                        <td>{{ $row->office->short_name }}</td>
                                         <td>{{ $row->current_qty }}</td>
-                                        <td>{{ $row->issued_qty }}</td>
+                                        <td>
+                                            @if ($row->issued_qty)
+                                            {{ $row->issued_qty }}
+                                            @else
+                                            0
+                                            @endif
+                                        </td>
+                                        <td>₱{{ $row->price }}</td>
                                         <td>{{ $row->status }}</td>
                                         <td>
                                             <div class="d-flex">
-                                                <a href="{{ route('logisticsofficer.iar.show', $row->id) }}" class="mx-2" data-toggle="tooltip" data-placement="left" title="View IAR"><i class="fas fa-eye"></i></a>
+                                                <a class="mx-2" id="update-iar-item" data-id="{{ $row->id }}" data-toggle="tooltip" data-placement="left" title="View IAR" style="cursor: pointer"><i class="fas fa-eye"></i></a>
                                                 @if (in_array('destroy', unserialize(Cookie::get('permissions'))['iar']))
                                                 <form action="{{ route('logisticsofficer.iar.destroy', $row->id) }}" method="post">
                                                     @method('delete')
@@ -98,133 +120,36 @@
             </div>
         </div>
     </div>
-    
 
-    {{-- modal to add items --}}
-    <div class="modal fade" id="add-iar-item-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Item for <span class="font-weight-bold">{{ $iar->iar_number }}</span></h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="">Item Category</label>
-                    <select name="" id="item-category" data-office="{{ Cookie::get('office') }}" class="form-control">
-                        <option value="">-</option>
-                        @foreach ($item_categories as $categories)
-                            <option value="{{ $categories->id }}">{{ $categories->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="row">
-                    <div class="col-8 border-right">
-                        <div class="row container" id="items" style="max-height: 600px; overflow-y: auto">
-                            {{-- ajax items --}}
-                        </div>
-                    </div>
-                    <div class="col-4" id="iar-item-details">
-                    </div>
-
-
-                </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-        </div>
-    </div>
+    @include('logisticsofficer.iar.modal.add-iar-item')
+    @include('logisticsofficer.iar.modal.update-iar-item')
 
 @endsection
 @section('scripts')
+    <script src="{{ asset('includes/js/iar.js') }}"></script>
     <script src="{{ asset('includes/js/interface/iar.js') }}"></script>
+    <script src="{{ asset('includes/js/interface/utilities.js') }}"></script>
+    <script src="{{ asset('includes/js/jquery.nice-number.js') }}"></script>
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         });
 
         $(document).ready(function () {
-            var itemsContainer = $('#items');
-            var itemDetails = $('#iar-item-details');
-
-            $('#iar-item-trigger').click(function () {
-                $('#add-iar-item-modal').modal({backdrop: 'static', keyboard: false});
-                $('#item-category').on('input',function () {
-                    var category = $(this).val();
-                    axios.get('/axios/items?category='+category)
-                    .then(function (response) {
-                        var data = response.data;
-                        data.forEach( function (index) {
-                            itemsContainer.html('');
-                            itemsContainer.append(interfaceAddIarItem(index));
-
-                            $('div[id="item-thumbnail"]').click( function () {
-                                
-                                axios.get('/axios/items?id='+ $(this).data('id'))
-                                .then(function (response) {
-                                    console.log(response.data.title);
-                                    itemDetails.html('');
-                                    itemDetails.append('' +
-                                        '<form action="logisticsofficer/iar/item/store" method="post">' +
-                                            '<h4>Item Selected</h4>' +
-                                            '<div class="form-group">'+
-                                                '<label class="font-weight-bold">Title</label>' +
-                                                '<div>'+ response.data.title +'</div>' +
-                                            '</div>' +
-                                            '<div class="form-group">'+
-                                                '<label class="font-weight-bold">Specifications</label>' +
-                                                '<div>'+ response.data.specifications +'</div>' +
-                                            '</div>' +
-                                            '<div class="form-group">' +
-                                                '<label class="font-weight-bold">Quantity</label>' +
-                                                '<div class="d-flex align-items-center">'+
-                                                // '<div class="col-1">'+
-                                                '<span id="deduct-qty" class="btn btn-primary mr-1">-</span>'+
-                                                // '</div>'+
-                                                // '<div class="col-4">'+
-                                                '<input type="number" id="beginning_qty" name="beginning_qty" class="form-control text-center" value="1">'+
-                                                // '</div>'+
-                                                // '<div class="col-1">'+
-                                                '<span id="add-qty" class="btn btn-primary ml-1">+</span>'+
-                                                // '</div>'+
-                                            '</div>'+
-                                            '</div>' +
-                                            '<button type="submit" class="btn btn-primary btn-block">Add Item</button>' +
-                                        '</form>'
-                                    );
-                                    qtyTicker($('#add-qty'), $('#deduct-qty'), $('#beginning_qty'))
-                                });
-                                // console.log(itemID)
-                                $(this).data('clicked', true);
-                                $(this).find('.card').addClass('border-success');
-                                $(this).css('opacity', '1');
-                                $(this).find('.card-img-top').css('opacity', 1);  
-                            });     
-                             
-                            $('div[id="item-thumbnail"]').mouseenter( function () {
-                                $(this).css('opacity', '1');
-                                $(this).css('transition', '1s');
-                            } ).mouseleave( function () {
-                                if (! $(this).data('clicked')) {
-                                    $(this).css('opacity', '0.7');
-                                    $(this).css('transition', '1s');
-                                }
-                            } );    
-                        });
-                    });
-                })
-            })
+            addIarItem();
+            updateIarItem();
         });
+
     </script>
     <!-- Page level plugins -->
     <script src="{{ asset('includes/sbadmin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('includes/bootstrap-5.1.3/js/bootstrap.js') }}"></script>
+
 
     <!-- Page level custom scripts -->
     <script src="{{ asset('includes/sbadmin/js/demo/datatables-demo.js') }}"></script>
+
+    <script src="{{ asset('includes/js/swal.js') }}"></script>
 
 @endsection

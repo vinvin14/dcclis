@@ -3,7 +3,7 @@ function windowMaxMin(trigger, target)
     $(trigger).click(function () {
         var status = $(this).data('status')
 
-        if(status === 'max') 
+        if(status === 'max')
         {
             $(this).find('i').removeClass('fas fa-minus')
             $(this).find('i').addClass('far fa-window-restore')
@@ -11,7 +11,7 @@ function windowMaxMin(trigger, target)
             $(target).hide(500)
 
         }
-        else 
+        else
         {
             $(this).find('i').removeClass('far fa-window-restore')
             $(this).find('i').addClass('fas fa-minus')
@@ -20,3 +20,5 @@ function windowMaxMin(trigger, target)
         }
     })
 }
+
+

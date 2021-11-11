@@ -5,6 +5,8 @@ namespace App\Http\Controllers\LogisticsOfficer;
 use App\Http\Controllers\Controller;
 use App\Http\Services\IARServices;
 use App\Models\Iar;
+use App\Models\Item;
+use App\Models\Office;
 use App\Repository\IARRepository;
 use App\Repository\ItemRepository;
 use App\Repository\PurchaseOrderRepository;
@@ -46,7 +48,6 @@ class IARController extends Controller
     public function store(Request $request, IARServices $iarServices)
     {
         $this->authorize('create', Iar::class);
-        
 
         $init = $iarServices->store($request->only(['ptr_number', 'po_number', 'date_of_delivery']));
 
@@ -67,12 +68,14 @@ class IARController extends Controller
      */
     public function show(Iar $iar)
     {
-        $iar->load('iarItem.item');
+        $iar->load('iarItem.item', 'iarItem.office');
         // $this->authorize('show', Iar::class);
-        
+
         return view('logisticsofficer.index')
         ->with(compact('iar'))
         ->with('item_categories', (new ItemRepository())->getCategories())
+        ->with('items', Item::select('id','title')->orderBy('title', 'ASC')->get())
+        ->with('offices', Office::orderBy('short_name', 'ASC')->get())
         ->with('module', 'iar.show')
         ->with('page', 'IAR');
     }
@@ -121,7 +124,7 @@ class IARController extends Controller
     public function destroy(Iar $iar, IARServices $iarServices)
     {
         $this->authorize('destroy', Iar::class);
-        
+
         $init = $iarServices->destroy($iar);
 
         if (@$init['error']) {
