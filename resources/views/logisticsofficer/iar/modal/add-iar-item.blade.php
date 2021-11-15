@@ -4,14 +4,14 @@
     <div class="modal-content">
         <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Add Item for <span class="font-weight-bold">{{ $iar->iar_number }}</span></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         </div>
         <div class="modal-body">
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="">Item Category</label>
-                <select name="" id="item-category" data-office="{{ Cookie::get('office') }}" class="form-control">
+                <select name="" id="item-category" data-office="{{ Cookie::get('office') }}" class="form-select">
                     <option value="">-</option>
                     @foreach ($item_categories as $categories)
                         <option value="{{ $categories->id }}">{{ $categories->name }}</option>
@@ -31,7 +31,7 @@
             </div>
         </div>
         <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
         </div>
     </div>
     </div>

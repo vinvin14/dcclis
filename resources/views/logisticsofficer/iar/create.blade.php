@@ -5,7 +5,7 @@
     <link href="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 @endsection
 @section('page')
-    {{-- <a href="{{ route('logisticsofficer.iar.index') }}" class="font-weight-normal"><i class="far fa-arrow-alt-circle-left"></i> Back to IAR List</a> --}}
+
     <h3>Create Inspection & Acceptance Report</h3>
     <div class="card w-50 mt-3 shadow-sm">
         <div class="card-body container">

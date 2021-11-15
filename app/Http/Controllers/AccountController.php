@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AccountController extends BaseController
 {
@@ -27,9 +28,12 @@ class AccountController extends BaseController
     }
 
     public function confirmRole(Request $request)
-    {
+    {  
+        $role = $this->getRoleById($request->input('role'));
+        
         return redirect(route('dashboard'))
-        ->withCookie(cookie()->forever('role', $request->get('role')));
+        ->withCookie(cookie()->make('role',$role->name, 1440))
+        ->withCookie(cookie()->make('role_id', $role->id, 1440));
     }
 
 }

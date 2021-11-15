@@ -29,15 +29,18 @@ class VerifyCredentials
         if (empty($request->cookie('role')))
         {
             $role = (new AccountServices())->getRoles(Auth::id());
+
             if (count($role) > 1)  
             {
-               return redirect(route('account.role.verify'));
+                return redirect(route('account.role.verify'));
             }
 
-            $cookieRole = $role;
+            return $next($request)
+            ->withCookie(cookie()->make('role', $role->name, 1440))
+            ->withCookie(cookie()->make('role_id', $role->id, 1440));
         }
-        $cookieRole = $request->cookie('role');
-        return $next($request)
-            ->withCookie(cookie()->forever('role', $cookieRole));
+        
+        return $next($request);
+        
     }
 }

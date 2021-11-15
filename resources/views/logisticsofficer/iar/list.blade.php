@@ -54,7 +54,7 @@
                                     <td>
                                         <div class="d-flex">
                                             <a href="{{ route('logisticsofficer.iar.show', $row->id) }}" class="mx-2" data-toggle="tooltip" data-placement="left" title="View IAR"><i class="fas fa-eye"></i></a>
-                                            @if (in_array('destroy', unserialize(Cookie::get('permissions'))['iar']))
+                                            @if (in_array('destroy', $permissions['iar']))
                                             <form action="{{ route('logisticsofficer.iar.destroy', $row->id) }}" method="post">
                                                 @method('delete')
                                                 <button type="submit" style="border: none;background-color:transparent" class="mx-2 text-danger" data-toggle="tooltip" data-placement="left" title="Delete this IAR" onclick="return confirm('Are you sure you want to delete this record?')"><i class="far fa-trash-alt"></i></button>

@@ -1,12 +1,16 @@
 function addIarItem()
 {
     var itemsContainer = $('#items');
-            var itemDetails = $('#iar-item-details');
+    var addIarItemModal = new bootstrap.Modal(document.getElementById('add-iar-item-modal'), {
+        keyboard: false
+      })
+     var itemDetails = $('#iar-item-details');
 
             $('#iar-item-trigger').click(function () {
+                
                 var iarId = $(this).data('id');
-
-                $('#add-iar-item-modal').modal({backdrop: 'static', keyboard: false});
+                addIarItemModal.show();
+                // $('#add-iar-item-modal').modal({backdrop: 'static', keyboard: false});
                 $('#item-category').on('input',function () {
                     var category = $(this).val();
                     axios.get('/axios/items?category='+category)
@@ -28,16 +32,16 @@ function addIarItem()
                                             '<h4>Item Selected</h4>' +
                                             '<input type="hidden" id="item-id" name="item_id" value="'+ itemID +'">' +
                                             '<input type="hidden" name="iar_id" value="'+ iarId +'">' +
-                                            '<div class="form-group">'+
-                                                '<label class="font-weight-bold">Title</label>' +
+                                            '<div class="mb-3">'+
+                                                '<label class="fw-bold">Title</label>' +
                                                 '<div>'+ response.data.title +'</div>' +
                                             '</div>' +
-                                            '<div class="form-group">'+
-                                                '<label class="font-weight-bold">Specifications</label>' +
+                                            '<div class="mb-3">'+
+                                                '<label class="fw-bold">Specifications</label>' +
                                                 '<textarea class="form-control" readonly="true">'+ response.data.specifications +'</textarea>' +
                                             '</div>' +
-                                            '<div class="form-group">' +
-                                                '<label class="font-weight-bold">Quantity</label>' +
+                                            '<div class="mb-3">' +
+                                                '<label class="fw-bold">Quantity</label>' +
                                                 '<div class="d-flex align-items-center">'+
                                                 // '<div class="col-1">'+
                                                 '<span id="deduct-qty" class="btn btn-primary mr-1">-</span>'+
@@ -50,13 +54,13 @@ function addIarItem()
                                                 // '</div>'+
                                             '</div>'+
                                             '</div>' +
-                                            '<div class="form-group">' +
-                                                '<label class="font-weight-bold">Price (in Php)</label>' +
+                                            '<div class="mb-3">' +
+                                                '<label class="fw-bold">Price (in Php)</label>' +
                                                 '<input type="number" class="form-control" step="0.001" id="price" min="1" name="price" required>' +
                                             '</div>' +
-                                            '<div class="form-group">' +
-                                                '<label class="font-weight-bold">Office/Section</label>' +
-                                                '<select id="office" name="receiving_office" class="form-control" required="true">' +
+                                            '<div class="mb-3">' +
+                                                '<label class="fw-bold">Office/Section</label>' +
+                                                '<select id="office" name="receiving_office" class="form-select" required="true">' +
                                                     '<option></option>' +
                                                 '</select>' +
                                             '</div>' +
@@ -65,6 +69,9 @@ function addIarItem()
                                     );
                                     createDropdownForOffices($('#office'));
                                     qtyTicker($('#add-qty'), $('#deduct-qty'), $('input[id="beginning_qty"]'))
+                                })
+                                .catch (function (error) {
+                                    console.log(error)
                                 });
                                 // console.log(itemID)
                                 $(this).data('clicked', true);
@@ -92,33 +99,24 @@ function addIarItem()
                                 }
                             } );
                         });
+                    })
+                    .catch (function (error) {
+                        itemsContainer.html(error.response.data);
                     });
                 })
             })
 }
 function updateIarItem()
 {
-    var modal = bootstrap.Modal.getOrCreateInstance($('#update-iar-item-modal'));
+    var modal = bootstrap.Modal.getOrCreateInstance($('#update-iar-item-modal'), {keyboard: false});
     $('a[id="update-iar-item"]').click(function () {
         var iarItemId = $(this).data('id');
 
-        // $('#update-iar-item-modal').modal('show')
         modal.show();
-        // modal.show();
-        // modal.addEventListener('hidden.bs.modal', function (event) {
-        //     $("#new-item-title").val('');
-        //     $('#new-title-container').html('');
-        //     $('#new-title').hide();
-        //   });
-
-        modal.on('hidden.bs.modal', function () {
-                $("#new-item-title").val('');
-                $('#new-title-container').html('');
-                $('#new-title').hide();
-        });
-
+        
         axios.get('/axios/iar/item?id='+ iarItemId)
         .then(function (response) {
+            console.log(response);
             data = response.data;
             $('#item-title').text(data.item.title);
             $('#office').val(data.receiving_office);

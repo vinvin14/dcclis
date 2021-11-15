@@ -1,4 +1,4 @@
-@extends('interface.main')
+@extends('layout.main')
 @section('title', 'Inspection & Acceptance Report')
 @section('styles')
     <!-- Custom styles for this page -->
@@ -27,49 +27,50 @@
     </style>
 @endsection
 @section('page')
-<a href="{{ route('logisticsofficer.iar.index') }}" class="font-weight-normal link-light"><i class="far fa-arrow-alt-circle-left"></i> Back to IAR List</a>
-    <div class="row mt-2">
-        <div class="col-xs-12 col-md-2 col-lg-2">
+<h3>Inspection & Acceptance Report Information</h3>
+{{-- <a href="{{ route('logisticsofficer.iar.index') }}" class="font-weight-normal link-light"><i class="far fa-arrow-alt-circle-left"></i> Back to IAR List</a> --}}
+    <div class="row mt-3">
+        <div class="col-xs-12 col-md-3 col-lg-3">
             <div class="card shadow-sm">
-                <div class="card-header font-weight-bold">
+                <div class="card-header fw-bold">
                     IAR Details
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="" class="font-weight-bold">IAR Number</label>
+                    <div class="mb-3">
+                        <label for="" class="fw-bold">IAR Number</label>
                         <div>{{ $iar->iar_number }}</div>
                     </div>
-                    <div class="form-group">
-                        <label for="" class="font-weight-bold">Date of Delivery</label>
+                    <div class="mb-3">
+                        <label for="" class="fw-bold">Date of Delivery</label>
                         {{-- <div>{{ \Carbon\Carbon::parse($iar->date_of_delivery)->format('F')  }}</div> --}}
                         <div>{{ \Carbon\Carbon::parse($iar->date_of_delivery)->format('F j, Y')  }}</div>
                     </div>
-                    <div class="form-group">
-                        <label for="" class="font-weight-bold">Recorded By</label>
+                    <div class="mb-3">
+                        <label for="" class="fw-bold">Recorded By</label>
                         <div>{{$iar->logistics_officer}}</div>
                     </div>
                     @if (!empty ($iar->ptr_number))
-                        <div class="form-group">
-                            <label for="" class="font-weight-bold">PTR #:</label>
+                        <div class="mb-3">
+                            <label for="" class="fw-bold">PTR #:</label>
                             <div>{{ $iar->ptr_number }}</div>
                         </div>
                     @endif
                     @if (!empty($iar->po_number))
-                        <div class="form-group">
-                            <label for="" class="font-weight-bold">Purchase Order #:</label>
+                        <div class="mb-3">
+                            <label for="" class="fw-bold">Purchase Order #:</label>
                             <div>{{ $iar->po_number }}</div>
                         </div>
                     @endif
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-10 col-lg-10 border-left">
+        <div class="col-xs-12 col-md-9 col-lg-9 border-left">
             <div class="card shadow-sm">
-                <div class="card-header font-weight-bold">
+                <div class="card-header fw-bold">
                     IAR Items
                 </div>
                 <div class="card-body">
-                    <button class="btn btn-info mb-3" id="iar-item-trigger" data-id="{{ $iar->id }}"><i class="fas fa-plus"></i> Add IAR Item</button>
+                    <button class="btn btn-primary mb-3" id="iar-item-trigger" data-id="{{ $iar->id }}"><i class="fas fa-plus"></i> Add IAR Item</button>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
@@ -103,7 +104,7 @@
                                         <td>
                                             <div class="d-flex">
                                                 <a class="mx-2" id="update-iar-item" data-id="{{ $row->id }}" data-toggle="tooltip" data-placement="left" title="View IAR" style="cursor: pointer"><i class="fas fa-eye"></i></a>
-                                                @if (in_array('destroy', unserialize(Cookie::get('permissions'))['iar']))
+                                                @if (in_array('destroy',$permissions['iar']))
                                                 <form action="{{ route('logisticsofficer.iar.destroy', $row->id) }}" method="post">
                                                     @method('delete')
                                                     <button type="submit" style="border: none;background-color:transparent" class="mx-2 text-danger" data-toggle="tooltip" data-placement="left" title="Delete this IAR" onclick="return confirm('Are you sure you want to delete this record?')"><i class="far fa-trash-alt"></i></button>
@@ -126,10 +127,20 @@
 
 @endsection
 @section('scripts')
-    <script src="{{ asset('includes/js/iar.js') }}"></script>
-    <script src="{{ asset('includes/js/interface/iar.js') }}"></script>
+    <script src="{{ asset('includes/js/logisticsofficer/iar.js') }}"></script>
+    <script src="{{ asset('includes/js/logisticsofficer/interface/iar.js') }}"></script>
     <script src="{{ asset('includes/js/interface/utilities.js') }}"></script>
     <script src="{{ asset('includes/js/jquery.nice-number.js') }}"></script>
+    <!-- Page level plugins -->
+    <script src="{{ asset('includes/sbadmin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('includes/bootstrap-5.1.3/js/bootstrap.js') }}"></script>
+
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('includes/sbadmin/js/demo/datatables-demo.js') }}"></script>
+
+    <script src="{{ asset('includes/js/swal.js') }}"></script>
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
@@ -141,15 +152,6 @@
         });
 
     </script>
-    <!-- Page level plugins -->
-    <script src="{{ asset('includes/sbadmin/vendor/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('includes/sbadmin/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('includes/bootstrap-5.1.3/js/bootstrap.js') }}"></script>
-
-
-    <!-- Page level custom scripts -->
-    <script src="{{ asset('includes/sbadmin/js/demo/datatables-demo.js') }}"></script>
-
-    <script src="{{ asset('includes/js/swal.js') }}"></script>
+    
 
 @endsection

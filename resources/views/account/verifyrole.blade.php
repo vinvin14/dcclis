@@ -7,14 +7,16 @@
                 <h4 class="text-center">Verify Account</h4>
                 <p class="font-italic">The system has detected that you have been granted multiple roles, for us to proceed please choose your primary role</p>
                 <form action="{{route('account.role.confirm')}}" method="get">
-                    @foreach ($roles as $role)
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="role" id="role" value="{{$role}}">
-                            <label class="form-check-label" for="role">
-                                {{$role}}
+                    <div class="px-5">
+                        @foreach ($roles as $role)
+                        <div class="form-check align-items-start">
+                            <input class="form-check-input" type="radio" name="role" id="flexRadioDefault1" value="{{ $role->id }}">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                  {{$role->name}}
                             </label>
                         </div>
                     @endforeach
+                    </div>
                     <button type="type" class="btn btn-block btn-primary mt-3">Confirm</button>
                 </form>
             </div>

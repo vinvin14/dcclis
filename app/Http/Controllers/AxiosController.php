@@ -16,9 +16,15 @@ class AxiosController extends Controller
         switch (true)
         {
             case $request->input('category') :
-                return $query->where('category', $request->input('category'))
-                ->orderBy('title', 'asc')
-                ->get();
+                $items = $query->where('category', $request->input('category'))
+                    ->orderBy('title', 'asc')
+                    ->get();
+                
+                if (empty($items->toArray())){
+                    return response()->json('No Record(s) Found!', 404);
+                }    
+
+                return response()->json($items);
                 break;
 
             case $request->input('id') :

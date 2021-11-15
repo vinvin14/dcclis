@@ -2,13 +2,14 @@
 
 namespace App\Policies;
 
+use App\Http\Controllers\BaseController;
 use App\Http\Services\AccountServices;
-use App\Models\User;
+
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IarPolicy
+class IarPolicy extends BaseController
 {
     use HandlesAuthorization;
 
@@ -21,7 +22,8 @@ class IarPolicy
 
     public function __construct(Request $request)
     {
-        $this->permissions = (new AccountServices())->getPermissions(Auth::id()); 
+        $this->permissions = $this->permissions($request->cookie('role_id'));
+    
         $this->role = $request->cookie('role');
     }
 

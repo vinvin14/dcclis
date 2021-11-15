@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\LogisticsOfficer;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Http\Services\IARServices;
 use App\Models\Iar;
 use App\Models\Item;
@@ -11,8 +11,10 @@ use App\Repository\IARRepository;
 use App\Repository\ItemRepository;
 use App\Repository\PurchaseOrderRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
-class IARController extends Controller
+class IARController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -24,6 +26,7 @@ class IARController extends Controller
         return view('logisticsofficer.index')
         ->with('iar', $iarRepository->all())
         ->with('module', 'iar.list')
+        ->with('permissions', $this->permissions($request->cookie('role_id')))
         ->with('page', 'IAR');
     }
 
@@ -48,7 +51,6 @@ class IARController extends Controller
     public function store(Request $request, IARServices $iarServices)
     {
         $this->authorize('create', Iar::class);
-
         $init = $iarServices->store($request->only(['ptr_number', 'po_number', 'date_of_delivery']));
 
         if (@$init['error']) {
@@ -66,16 +68,17 @@ class IARController extends Controller
      * @param  \App\Models\Iar  $iar
      * @return \Illuminate\Http\Response
      */
-    public function show(Iar $iar)
+    public function show(Iar $iar, Request $request)
     {
         $iar->load('iarItem.item', 'iarItem.office');
         // $this->authorize('show', Iar::class);
-
+        // dd($this->permissions($request->cookie('role_id')));
         return view('logisticsofficer.index')
         ->with(compact('iar'))
         ->with('item_categories', (new ItemRepository())->getCategories())
         ->with('items', Item::select('id','title')->orderBy('title', 'ASC')->get())
         ->with('offices', Office::orderBy('short_name', 'ASC')->get())
+        ->with('permissions', $this->permissions($request->cookie('role_id')))
         ->with('module', 'iar.show')
         ->with('page', 'IAR');
     }
@@ -91,6 +94,7 @@ class IARController extends Controller
         return view('logisticsofficer.index')
         ->with(compact('iar'))
         ->with('module', 'iar.edit')
+        ->with('permissions', $this->permissions($request->cookie('role_id')))
         ->with('page', 'IAR');
     }
 

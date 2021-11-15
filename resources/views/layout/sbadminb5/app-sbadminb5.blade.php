@@ -44,7 +44,7 @@
 <div id="app">
         @yield('content')
 </div>
-
+<script src="{{ asset('includes/js/jquery.3.6.js') }}"></script>
 <script src="{{ asset('themes/sbadminb5/js/boostrap5.1.3.js') }}"></script>
 <script src="{{ asset('themes/sbadminb5/js/scripts.js') }}"></script>
 <script src="{{ asset('themes/sbadminb5/js/chart.min.js') }}"></script>
